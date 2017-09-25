@@ -1,16 +1,16 @@
-import cv2,os
+import cv2, os
 import numpy as np
 from PIL import Image 
 import pickle
 
-recognizer = cv2.createLBPHFaceRecognizer()
-recognizer.load('trainer/trainer.yml')
+recognizer = cv2.face.LBPHFaceRecognizer_create()
+recognizer.read('trainer/trainer.yml')
 cascadePath = "Classifiers/face.xml"
 faceCascade = cv2.CascadeClassifier(cascadePath);
 path = 'dataSet'
 
 cam = cv2.VideoCapture(0)
-font = cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 1, 1, 0, 1, 1) #Creates a font
+font = cv2.FONT_HERSHEY_SIMPLEX #Creates a font
 while True:
     ret, im =cam.read()
     gray=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
@@ -18,22 +18,24 @@ while True:
     for(x,y,w,h) in faces:
         nbr_predicted, conf = recognizer.predict(gray[y:y+h,x:x+w])
         cv2.rectangle(im,(x-50,y-50),(x+w+50,y+h+50),(225,0,0),2)
-        if(nbr_predicted==2):
-             nbr_predicted='Altair'
-        elif(nbr_predicted==1):
-             nbr_predicted='Nayara'
+        #if(conf<50):
+        if(nbr_predicted==1):
+            nbr_predicted='Nayara'
+        elif(nbr_predicted==2):
+            nbr_predicted='Altair'
         elif(nbr_predicted==3):
-             nbr_predicted='Alisson'
-             
+            nbr_predicted='Alisson'
+        #else:
+        #    nbr_predicted='Desconhecido'    
       
-        if (str(conf) >= '40'):
-            cv2.cv.PutText(cv2.cv.fromarray(im),str(nbr_predicted)+"--"+str(conf), (x,y+h),font, 255) #Draw the text
+        #if (str(conf) >= '40'):
+            cv2.putText(im,str(nbr_predicted)+"--"+str(conf), (x,y+h),font,2,255) #Draw the text
             cv2.imshow('im',im)
             cv2.waitKey(10)
-        else:
-            cv2.cv.PutText(cv2.cv.fromarray(im)," Desconhecido ", (x,y+h),font, 255) #Draw the text
-            cv2.imshow('im',im)
-            cv2.waitKey(10)    
+        #else:
+        #    cv2.cv.PutText(cv2.cv.fromarray(im)," Desconhecido ", (x,y+h),font, 255) #Draw the text
+        #    cv2.imshow('im',im)
+        #    cv2.waitKey(10)    
 
 
 

@@ -1,4 +1,5 @@
 import cv2,os
+import sqlite3
 import numpy as np
 from PIL import Image 
 
@@ -33,6 +34,29 @@ def get_images_and_labels(path):
      # return the images list and labels list
      return images, labels
 
+def create_or_open_db(db_file):
+    db_is_new = not os.path.exists(db_file)
+    conn = sqlite3.connect(db_file)
+    if db_is_new:
+        print 'Creating treiner schema'
+        sql_treiner = '''create table if not exists TREINER(
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        TREINER_FILE BLOB;'''
+        conn.execute(sql_treiner) # create treiner table
+    else:
+        print 'Schema exists\n'
+    return conn
+
+def insert_file(treiner_file):
+    with open(treiner_file, 'rb') as input_file:
+        ablob = input_file.read()
+        base=os.path.basename(treiner_file)
+        afile, ext = os.path.splitext(base)
+        sql = '''INSERT INTO TREINER
+        (ID, Treiner_file)
+        VALUES(?, ?);'''
+        conn.execute(sql,[sqlite3.Binary(ablob), ext, afile]) 
+        conn.commit()
 
 images, labels = get_images_and_labels(path)
 cv2.imshow('test',images[0])
@@ -40,4 +64,9 @@ cv2.waitKey(1)
 
 recognizer.train(images, np.array(labels))
 recognizer.write('trainer/trainer.yml')
+
+create_or_open_db('FaceBase.db')
+insertOrUpdate('trainer/trainer.yml')
+
+
 cv2.destroyAllWindows()

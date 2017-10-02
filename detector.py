@@ -18,7 +18,6 @@ while True:
     for(x,y,w,h) in faces:
         nbr_predicted, conf = recognizer.predict(gray[y:y+h,x:x+w])
         cv2.rectangle(im,(x-50,y-50),(x+w+50,y+h+50),(225,0,0),2)
-<<<<<<< HEAD
         #if(conf<50):
         if(nbr_predicted==1):
             nbr_predicted='Nayara'
@@ -31,21 +30,6 @@ while True:
       
         #if (str(conf) >= '40'):
             cv2.putText(im,str(nbr_predicted)+"--"+str(conf), (x,y+h),font,2,255) #Draw the text
-=======
-        if(conf>40):
-            if(nbr_predicted==1):
-                nbr_predicted='Nayara'
-            if(nbr_predicted==2):
-                nbr_predicted='Altair'
-            if(nbr_predicted==3):
-                nbr_predicted='Alisson'
-        else:
-            nbr_predicted='Desconhecido'
-             
-      
-        #if (str(conf) >= '40'):
-            cv2.cv.PutText(cv2.cv.fromarray(im),str(nbr_predicted)+"--"+str(conf), (x,y+h),font, 255) #Draw the text
->>>>>>> master
             cv2.imshow('im',im)
             cv2.waitKey(10)
         #else:

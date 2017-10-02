@@ -1,25 +1,30 @@
 import cv2
 import sqlite3
 cam = cv2.VideoCapture(0)
-detector=cv2.CascadeClassifier('Classifiers/face.xml')
-i=0
-offset=50
+detector = cv2.CascadeClassifier('Classifiers/face.xml')
+i = 0
+offset = 50
+
 
 def create_or_open_db(db_file):
     db_is_new = not os.path.exists(db_file)
     conn = sqlite3.connect(db_file)
     if db_is_new:
-			print 'Creating schema'
-			sql = '''create table if not exists PICTURES(
-			ID INTEGER PRIMARY KEY AUTOINCREMENT,
-			PICTURE BLOB,
-			TYPE TEXT,
-			FILE_NAME TEXT);'''
-			sql1 = '''create table if not exists PEOPLES(
-			ID INTEGER PRIMARY KEY,
-			NAME TEXT;'''
-			conn.execute(sql) # shortcut for conn.cursor().execute(sql)
-			conn.execute(sql1)
+        print 'Creating schema'
+        sql = '''create table if not exists PEOPLES(
+        ID INTEGER PRIMARY KEY,
+        Name TEXT);'''
+        sql_image = '''create table if not exists PICTURES(
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        Picture BLOB,
+        Type TEXT,
+        File_name TEXT);'''
+        #sql_treiner = '''create table if not exists TREINER(
+        #ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        #Treiner_file BLOB);'''
+        conn.execute(sql) # shortcut for conn.cursor().execute(sql)
+        conn.execute(sql_image) # create image table
+        #conn.execute(sql_treiner) # create treiner table
     else:
         print 'Schema exists\n'
     return conn
@@ -50,14 +55,14 @@ def insert_picture(picture_file):
         conn.execute(sql,[sqlite3.Binary(ablob), ext, afile]) 
         conn.commit()
 	
-#conn = create_or_open_db('FaceBase.db')
-#picture_file = "./dataSet/face- 2.1.jpg"
-#insert_picture(conn, picture_file)
-#conn.close()
+# conn = create_or_open_db('FaceBase.db')
+# picture_file = "./dataSet/face- 2.1.jpg"
+# insert_picture(conn, picture_file)
+# conn.close()
 
 id=raw_input('Digite o id ')
 name=raw_input('Digite o Nome ')
-#create_or_open_db('FaceBase.db')
+create_or_open_db('FaceBase.db')
 insertOrUpdate(id,name)
 
 while True:

@@ -3,7 +3,7 @@ import sqlite3
 import numpy as np
 from PIL import Image 
 
-recognizer = cv2.face.LBPHFaceRecognizer_create();
+recognizer = cv2.createLBPHFaceRecognizer()
 cascadePath = "Classifiers/face.xml"
 faceCascade = cv2.CascadeClassifier(cascadePath);
 path = 'dataSet'
@@ -41,20 +41,23 @@ def create_or_open_db(db_file):
         print 'Creating treiner schema'
         sql_treiner = '''create table if not exists TREINER(
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        TREINER_FILE BLOB;'''
+        File BLOB,
+        Type TEXT,
+        File_name TEXT;'''
         conn.execute(sql_treiner) # create treiner table
     else:
-        print 'Schema exists\n'
+        print 'Treiner schema exists\n'
     return conn
 
-def insert_file(treiner_file):
-    with open(treiner_file, 'rb') as input_file:
+def insert_file(treiner_file, db_file):
+     conn = sqlite3.connect(db_file)
+     with open(treiner_file, 'rb') as input_file:
         ablob = input_file.read()
         base=os.path.basename(treiner_file)
         afile, ext = os.path.splitext(base)
         sql = '''INSERT INTO TREINER
-        (ID, Treiner_file)
-        VALUES(?, ?);'''
+        (FILE, TYPE, FILE_NAME)
+        VALUES(?, ?, ?);'''
         conn.execute(sql,[sqlite3.Binary(ablob), ext, afile]) 
         conn.commit()
 
@@ -63,10 +66,10 @@ cv2.imshow('test',images[0])
 cv2.waitKey(1)
 
 recognizer.train(images, np.array(labels))
-recognizer.write('trainer/trainer.yml')
+recognizer.save('trainer/trainer.yml')
 
 create_or_open_db('FaceBase.db')
-insertOrUpdate('trainer/trainer.yml')
+insert_file('trainer/trainer.yml','FaceBase.db')
 
 
 cv2.destroyAllWindows()

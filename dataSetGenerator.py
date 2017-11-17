@@ -20,7 +20,7 @@ def create_or_open_db(db_file):
         Type TEXT,
         File_name TEXT);'''
         sql_trainer = '''create table if not exists TRAINER(
-        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        ID INTEGER PRIMARY KEY,
         File BLOB,
         Type TEXT,
         File_name TEXT);'''
@@ -79,7 +79,7 @@ while True:
         cv2.rectangle(im,(x-50,y-50),(x+w+50,y+h+50),(225,0,0),2)
         cv2.imshow('im',im[y-offset:y+h+offset,x-offset:x+w+offset])
         cv2.waitKey(100)
-    if i>31:
+    if i>51:
         cam.release()
         cv2.destroyAllWindows()
         break

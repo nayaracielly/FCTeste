@@ -40,7 +40,7 @@ def create_or_open_db(db_file):
     if db_is_new:
         print 'Creating trainer schema'
         sql_trainer = '''create table if not exists TRAINER(
-        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        ID INTEGER PRIMARY KEY,
         File BLOB,
         Type TEXT,
         File_name TEXT);'''
@@ -55,9 +55,11 @@ def insert_file(trainer_file, db_file):
         ablob = input_file.read()
         base=os.path.basename(trainer_file)
         afile, ext = os.path.splitext(base)
+        sql_del = '''DELETE FROM TRAINER WHERE ID = 1;'''
         sql = '''INSERT INTO TRAINER
-        (FILE, TYPE, FILE_NAME)
-        VALUES(?, ?, ?);'''
+        (ID, FILE, TYPE, FILE_NAME)
+        VALUES('1',?, ?, ?);'''
+        conn.execute(sql_del)
         conn.execute(sql,[sqlite3.Binary(ablob), ext, afile]) 
         conn.commit()
 

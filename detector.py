@@ -5,9 +5,9 @@ from PIL import Image
 import pickle
 
 
-def extract_picture(cursor, treiner_file):
-      sql1 = "SELECT FILE, TYPE, FILE_NAME FROM TREINER WHERE id = :id"
-      param = {'id': treiner_file}
+def extract_picture(cursor, trainer_file):
+      sql1 = "SELECT FILE, TYPE, FILE_NAME FROM TRAINER WHERE id = :id"
+      param = {'id': trainer_file}
       cursor.execute(sql1,param)
       ablob, ext, afile = cursor.fetchone()
       filename = 'trainer/' + afile + ext

@@ -53,9 +53,15 @@ while True:
              
         for idx, i in enumerate(result):
              # print result[idx]
-              if(nbr_predicted==result[idx]):
-                   nbr_predicted=result2[idx]
+              #if(nbr_predicted==result[idx]):
+              #     nbr_predicted=result2[idx]
                #    print result2[idx]
+               if(nbr_predicted==1):
+                nbr_predicted='Altair'
+               elif(nbr_predicted==2):
+                nbr_predicted='Nayara'
+               elif(nbr_predicted==3):
+                nbr_predicted='Alisson'
         
         cv2.cv.PutText(cv2.cv.fromarray(im),str(nbr_predicted)+"--"+str(conf), (x,y+h),font, 255) #Draw the text
         cv2.imshow('im',im)

@@ -59,7 +59,7 @@ while True:
                if(nbr_predicted==1):
                 nbr_predicted='Altair'
                elif(nbr_predicted==2):
-                nbr_predicted='Nayara'
+                nbr_predicted='Rafael'
                elif(nbr_predicted==3):
                 nbr_predicted='Alisson'
         
